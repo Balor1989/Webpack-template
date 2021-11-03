@@ -1,11 +1,19 @@
 const path = require('path');
 
-module.exports = {
+const isDev = process.env.NODE_ENV === "development";
+const isProd = !isDev;
+
+const filename = (ext) => isDev
+    ? `[name].${ext}`
+    : `[name].[contenthash].${ext}`;
+
+ module.exports = {
+    context: path.resolve(__dirname, 'src'),
      mode: 'development',
-    entry: './src/index.js',
+    entry: './index.js',
     output: {
         path: path.resolve(__dirname, 'build'),
-        filename: 'webpack.bundle.js',
+        filename: `./js/${filename('js')}`
     },
 
-};
+  };
