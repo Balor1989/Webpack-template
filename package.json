@@ -5,14 +5,15 @@
   "private": true,
   "scripts": {
     "prod": "cross-env NODE_ENV=production webpack --mode production",
-    "dev": "cross-env NODE_ENV=development webpack --mode development"
+    "dev": "cross-env NODE_ENV=development webpack --mode development",
+    "start": "cross-env NODE_ENV=development webpack serve --mode development"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Balor1989/Webpack-template.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "Evgeniy",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/Balor1989/Webpack-template/issues"
@@ -27,7 +28,8 @@
     "node-sass": "^6.0.1",
     "sass-loader": "^12.3.0",
     "webpack": "^5.61.0",
-    "webpack-cli": "^4.9.1"
+    "webpack-cli": "^4.9.1",
+    "webpack-dev-server": "^4.4.0"
   },
   "main": "webpack.config.js",
   "dependencies": {
