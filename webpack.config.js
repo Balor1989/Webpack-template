@@ -17,7 +17,8 @@ const filename = (ext) => isDev
     entry: './index.js',
     output: {
         path: path.resolve(__dirname, 'build'),
-        filename: `./js/${filename('js')}`
+        filename: `./js/${filename('js')}`,
+        publicPath: ''
     },
     devServer:{
         historyApiFallback:{
@@ -43,16 +44,52 @@ const filename = (ext) => isDev
      ],
      module:{
          rules: [
+             {
+                 test: /\.html$/,
+                use:["html-loader"]
+             },
             {
                 test: /\.css$/i,
                 use: [
                     MiniCssExtractPlugin.loader, "css-loader"
                 ],
               },
+              {
+                    test: /\.s[ac]ss$/,
+                    use: [{
+                        loader: MiniCssExtractPlugin.loader,
+                        options:{
+                            publicPath: (resourcePath, context) => {
+                                return path.relative(path.dirname(resourcePath), context) + '/';
+                            },
+                        }
+                    },
+                "css-loader", 
+                "sass-loader"
+                ],
+                },
             {
-                test: /\.s[ac]ss$/i,
-                use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"],
+                test: /\.(?:|gif|svg|png|jpg|jpeg)$/,
+                use: [{
+                    loader:'file-loader',
+                    options: {
+                    name: `./img/${filename('[ext]')}`     
+                    },
+                }],
             },
          ]
      }
   };
+
+
+
+
+  
+
+
+
+
+
+
+
+
