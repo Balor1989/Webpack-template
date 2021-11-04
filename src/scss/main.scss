@@ -1,5 +1,14 @@
-@import "./partials/utilities/utilities.scss";
-body {
-background-color: rgb(78, 142, 194);
+@import './partials/utilities/utilities.scss';
 
+body {
+	background-image: url(../img/honeycomb-34984.svg);
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+h1 {
+	padding-top: 300px;
+	font-size: 350px;
+	text-align: center;
+	margin-left: auto;
+	margin-right: auto;
 }

@@ -4,7 +4,8 @@ const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plugin');
 const TerserWebpackPlugin = require('terser-webpack-plugin');
-const ImageminPlugin = require("imagemin-webpack");
+const ImageMinimizerPlugin = require("image-minimizer-webpack-plugin");
+const { extendDefaultPlugins } = require("svgo");
 
 
 const isDev = process.env.NODE_ENV === "development";
@@ -41,31 +42,35 @@ const plugins = () => {
     ];
      if(isProd){
          basePlugins.push(
-    new ImageminPlugin({
-        bail: false, // Ignore errors on corrupted images
-        cache: true,
-        imageminOptions: {
-            // Before using imagemin plugins make sure you have added them in `package.json` (`devDependencies`) and installed them
-    
-            // Lossless optimization with custom option
-            // Feel free to experiment with options for better result for you
-            plugins: [
-            ["gifsicle", { interlaced: true }],
-            ["jpegtran", { progressive: true }],
-            ["optipng", { optimizationLevel: 5 }],
-            [
-                "svgo",
+    new ImageMinimizerPlugin({
+      minimizerOptions: {
+        // Lossless optimization with custom option
+        // Feel free to experiment with options for better result for you
+        plugins: [
+          ["gifsicle", { interlaced: true }],
+          ["jpegtran", { progressive: true }],
+          ["optipng", { optimizationLevel: 5 }],
+          // Svgo configuration here https://github.com/svg/svgo#configuration
+          [
+            "svgo",
+            {
+              plugins: extendDefaultPlugins([
                 {
-                plugins: [
-                    {
-                    removeViewBox: false
-                    }
-                ]
-                }
-            ]
-            ]
-        }
-        })
+                  name: "removeViewBox",
+                  active: false,
+                },
+                {
+                  name: "addAttributesToSVGElement",
+                  params: {
+                    attributes: [{ xmlns: "http://www.w3.org/2000/svg" }],
+                  },
+                },
+              ]),
+            },
+          ],
+        ],
+      },
+    }),
          )
      }
     return basePlugins;
@@ -90,6 +95,9 @@ const filename = (ext) => isDev
         },
         static: path.resolve(__dirname, 'build'),
         open: true,
+         client: {
+      logging: 'error'
+    },
         compress: true,
         port: 4444,
     },
@@ -127,15 +135,11 @@ const filename = (ext) => isDev
                 "sass-loader"
                 ],
                 },
-            {
-                test: /\.(?:|gif|svg|png|jpg|jpeg)$/,
-                use: [{
-                    loader:'file-loader',
-                    options: {
-                    name: `./img/${filename('[ext]')}`     
-                    },
-                }],
-            },
+                {
+        test: /\.(jpe?g|png|gif|svg)$/i,
+        type: "asset",
+      },
+        
             {
                 test: /\.(?:|woff2)$/,
                 use: [{
