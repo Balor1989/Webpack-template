@@ -42,12 +42,18 @@ const filename = (ext) => isDev
              filename: `./css/${filename('css')}`
          })
      ],
+     devtool: isProd ? false : "source-map",
      module:{
          rules: [
              {
                  test: /\.html$/,
                 use:["html-loader"]
              },
+             {
+                test: /\.js$/,
+                exclude: /node_modules/, 
+                use: ['babel-loader'],
+              },
             {
                 test: /\.css$/i,
                 use: [
@@ -74,6 +80,15 @@ const filename = (ext) => isDev
                     loader:'file-loader',
                     options: {
                     name: `./img/${filename('[ext]')}`     
+                    },
+                }],
+            },
+            {
+                test: /\.(?:|woff2)$/,
+                use: [{
+                    loader:'file-loader',
+                    options: {
+                    name: `./fonts/${filename('[ext]')}`     
                     },
                 }],
             },
